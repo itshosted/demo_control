@@ -1,0 +1,93 @@
+# Managed by Puppet
+---
+
+:backends:
+- yaml
+
+:hierarchy:
+
+###############################################################################
+# Custom facts
+###############################################################################
+# A set of custom facts are used to differentiate between servers in order to
+# be able to create deviations from the standard settings.
+# The table below will give you an idea of the custom facts
+#
+# --------------------------------------------------------------------------------
+# fact name            | description                           | example
+# ---------------------|---------------------------------------|------------------
+# customer_name        | name of the customer                  | demo
+# customer_environment | the DTAP environment of customer env  | production
+# application_name     | name of the application chain         | demo
+# application_role     | role of the server in the chain       | puppetmaster
+# application_instance | instance of the application           | 1
+# datacenter           | geographical location datacenter      | amsterdam
+# --------------------------------------------------------------------------------
+
+###############################################################################
+# hierarchy
+###############################################################################
+
+# -----------------------------------------------------------------------------
+# Node level
+# -----------------------------------------------------------------------------
+
+# Node specific (usefull for initial deployment of external facts)
+- "nodes/%{clientcert}"
+
+# Node specific by customer
+- "customer_name_%{customer_name}/nodes/%{clientcert}"
+
+# Node specific by customer for OS patching
+- "customer_name_%{customer_name}/patching_nodes/%{clientcert}"
+
+# -----------------------------------------------------------------------------
+# Application level
+# -----------------------------------------------------------------------------
+
+# Application chain specific (by customer_environment, application name, role and instance)
+- "customer_name_%{customer_name}/applications/%{customer_environment}/name_%{application_name}/role_%{application_role}/instance_%{application_instance}"
+# Application chain specific (by customer_environment, application name and role)
+- "customer_name_%{customer_name}/applications/%{customer_environment}/name_%{application_name}/role_%{application_role}/common"
+# Application chain specific (by application name)
+- "customer_name_%{customer_name}/applications/%{customer_environment}/name_%{application_name}/common"
+# Application role generic
+- "customer_name_%{customer_name}/applications/%{customer_environment}/role_%{application_role}"
+
+
+# Application chain specific (by application name, role and instance)
+- "customer_name_%{customer_name}/applications/name_%{application_name}/role_%{application_role}/instance_%{application_instance}"
+# Application chain specific (by application name and role)
+- "customer_name_%{customer_name}/applications/name_%{application_name}/role_%{application_role}/common"
+# Application chain specific (by application name)
+- "customer_name_%{customer_name}/applications/name_%{application_name}/common"
+# Application role generic
+- "customer_name_%{customer_name}/applications/role_%{application_role}"
+
+
+# -----------------------------------------------------------------------------
+# Infrastructure/OS level
+# -----------------------------------------------------------------------------
+
+# OS/hypervisor/location specific by customer
+- "customer_name_%{customer_name}/os/%{operatingsystem}/%{operatingsystemmajrelease}"
+- "customer_name_%{customer_name}/os/%{operatingsystem}/common"
+- "customer_name_%{customer_name}/osfamily/%{osfamily}"
+- "customer_name_%{customer_name}/virtual/%{virtual}"
+- "customer_name_%{customer_name}/location/%{location}"
+- "customer_name_%{customer_name}/common"
+
+# OS/Hypervisor/location specific (not customer nor environment specific)  
+- "os/%{operatingsystem}/%{operatingsystemmajrelease}"
+- "os/%{operatingsystem}/common"
+- "osfamily/%{osfamily}"
+- "virtual/%{virtual}"
+- "location/%{location}"
+- "common"
+
+
+:yaml:
+  :datadir: '/etc/puppetlabs/code/environments/hiera/hieradata'
+
+:merge_behavior: deeper
+
