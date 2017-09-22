@@ -12,7 +12,6 @@ mod 'puppetlabs-firewall'
 mod 'puppetlabs-inifile'
 mod 'puppetlabs-postgresql'
 mod 'puppetlabs-apt'
-mod 'puppetlabs-concat'
 
 mod 'puppet-puppetboard'
 mod 'puppetlabs-vcsrepo'
